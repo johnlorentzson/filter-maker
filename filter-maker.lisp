@@ -30,7 +30,6 @@
    (%combining-type :accessor combining-type :initarg :combining-type :initform :or)
    (%rules :accessor rules :initform '())
    (%items :reader items :initarg :items)
-   (%selections :accessor selections :initform '())
    (%return-value :accessor return-value :initform :cancelled))
   (:menu-bar nil)
   (:panes
