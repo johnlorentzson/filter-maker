@@ -56,9 +56,22 @@
            :activate-callback (lambda (gadget)
                                 (declare (ignore gadget))
                                 (setf (return-value *application-frame*) :cancelled)
-                                (frame-exit *application-frame*))))
+                                (frame-exit *application-frame*)))
+   (combining-type-list :option-pane
+                        :items '((:or "Match any rule")
+                                 (:and "Match all rules"))
+                        :name-key #'second
+                        :value-key #'first
+                        :value :or
+                        :value-changed-callback
+                        (lambda (gadget value)
+                          (declare (ignore gadget))
+                          (setf (combining-type *application-frame*) value))))
   (:layouts
-   (default (vertically () rule-list (horizontally () +fill+ add-rule ok cancel)))))
+   (default (vertically ()
+              (horizontally () +fill+ combining-type-list)
+              rule-list
+              (horizontally () +fill+ add-rule ok cancel)))))
 
 (defun display-rule-list (frame pane)
   (dolist (rule (rules frame))
@@ -118,10 +131,17 @@
 
 (defmethod apply-filter ((frame filter-maker))
   (flet ((filter (item)
-           (loop :for rule :in (rules frame)
-                 :when (not (apply-rule rule item))
-                   :return nil
-                 :finally (return t))))
+           (cond
+             ((eq :or (combining-type frame))
+              (loop :for rule :in (rules frame)
+                    :when (apply-rule rule item)
+                      :return t
+                    :finally (return nil)))
+             ((eq :and (combining-type frame))
+              (loop :for rule :in (rules frame)
+                    :when (not (apply-rule rule item))
+                      :return nil
+                    :finally (return t))))))
     (if (null (rules frame))
         nil ; An empty filter matches on nothing.
         (loop :for item :in (items frame)
