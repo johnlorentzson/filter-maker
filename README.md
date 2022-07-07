@@ -24,12 +24,12 @@ to send a pull request.
 ```
 
 This will open a Filter Maker window letting the user make a filter
-using the predicates STRING-NOT-EQUAL, STRING-EQUAL and STRING-ALL-UPPERCASE-P.
-The keys available will be FIRST, SECOND and THIRD. Once a filter is
+using the predicates `STRING-NOT-EQUAL`, `STRING-EQUAL` and `STRING-ALL-UPPERCASE-P`.
+The keys available will be `FIRST`, `SECOND` and `THIRD`. Once a filter is
 constructed and the user clicks "OK" the filter will be applied to
 the list of items. The numbers after the names are the predicate's argument count.
 For now, this must be 1 or 2. I plan to support any number of arguments
-eventually.
+eventually. The return value will be the filtered list or `:CANCELLED`.
 
 ## Known problems
 
