@@ -3,7 +3,7 @@
 Filter Maker lets users make filters out of predicates and keys,
 similar to those GUI email filter tools. The developer using the
 library simply provides a set of predicates (and their names) as well
-as some keys (and their names) and the items to filter on.
+as some keys (and their names) and the items to filter.
 
 Note that I don't know how to make CLIM programs look (or work) good
 so if you think you can do better you're probably right, feel free
