@@ -154,9 +154,7 @@
                                        :keys keys
                                        :items items)))
     (run-frame-top-level frame)
-    (if (eq (return-value frame) :cancelled)
-        (values nil :cancelled)
-        (return-value frame))))
+    (return-value frame)))
 
 (defun filter (predicates keys items)
   "Display a GUI filter maker with PREDICATES and KEYS that will filter ITEMS."
