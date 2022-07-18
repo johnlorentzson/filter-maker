@@ -125,7 +125,11 @@
                :value-changed-callback
                (lambda (gadget value)
                  (declare (ignore gadget))
-                 (setf (key rule) value)))))
+                 (setf (key rule) value)
+                 (when (eq (frame-current-layout frame) 'item-display-layout)
+                   (redisplay-frame-pane
+                    frame
+                    (find-pane-named frame 'item-display)))))))
     (surrounding-output-with-border (pane :shape :rounded)
       (format pane "Predicate~%")
       (with-output-as-gadget (pane)
