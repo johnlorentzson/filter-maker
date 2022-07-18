@@ -69,9 +69,8 @@
                           (setf (combining-type *application-frame*) value))))
   (:layouts
    (default (vertically ()
-              (horizontally () +fill+ combining-type-list)
               rule-list
-              (horizontally () +fill+ add-rule ok cancel)))))
+              (horizontally () combining-type-list +fill+ add-rule ok cancel)))))
 
 (defun display-rule-list (frame pane)
   (dolist (rule (rules frame))
