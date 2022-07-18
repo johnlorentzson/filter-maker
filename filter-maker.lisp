@@ -19,8 +19,8 @@
 (defmethod apply-rule ((rule rule) item)
   (if (= (arguments (predicate rule)) 2)
       (funcall (predicate-function (predicate rule))
-               (funcall (key-function (key rule)) item)
-               (value rule))
+               (value rule)
+               (funcall (key-function (key rule)) item))
       (funcall (predicate-function (predicate rule))
                (funcall (key-function (key rule)) item))))
 
