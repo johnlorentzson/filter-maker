@@ -66,11 +66,29 @@
                         :value-changed-callback
                         (lambda (gadget value)
                           (declare (ignore gadget))
-                          (setf (combining-type *application-frame*) value))))
+                          (setf (combining-type *application-frame*) value)))
+   (show-items-button :push-button
+                      :label "Toggle Filter Preview"
+                      :activate-callback
+                      (lambda (gadget)
+                        (declare (ignore gadget))
+                        (if (eq (frame-current-layout *application-frame*)
+                                'item-display-layout)
+                            (setf (frame-current-layout *application-frame*)
+                                  'default)
+                            (setf (frame-current-layout *application-frame*)
+                                  'item-display-layout))))
+   (item-display :application
+                 :display-function 'display-items))
   (:layouts
-   (default (vertically ()
-              rule-list
-              (horizontally () combining-type-list +fill+ add-rule ok cancel)))))
+   (default
+    (vertically ()
+      rule-list
+      (horizontally () combining-type-list show-items-button +fill+ add-rule ok cancel)))
+   (item-display-layout
+    (vertically ()
+      (horizontally () rule-list item-display)
+      (horizontally () combining-type-list show-items-button +fill+ add-rule ok cancel)))))
 
 (defun display-rule-list (frame pane)
   (dolist (rule (rules frame))
@@ -84,7 +102,11 @@
                 :value-changed-callback
                 (lambda (gadget value)
                   (declare (ignore gadget))
-                  (setf (value rule) value))))
+                  (setf (value rule) value)
+                  (when (eq (frame-current-layout frame) 'item-display-layout)
+                    (redisplay-frame-pane
+                     frame
+                     (find-pane-named frame 'item-display))))))
          (predicate (make-pane
                      :option-pane
                      :value (predicate rule)
@@ -127,6 +149,10 @@
                      (setf (rules frame) (delete rule (rules frame)))
                      (redisplay-frame-panes frame)))))
     (terpri pane)))
+
+(defun display-items (frame pane)
+  (dolist (item (apply-filter frame))
+    (format pane "~A~%" item)))
 
 (defmethod apply-filter ((frame filter-maker))
   (flet ((filter (item)
