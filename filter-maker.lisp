@@ -160,17 +160,19 @@
 
 (defmethod apply-filter ((frame filter-maker))
   (flet ((filter (item)
-           (cond
-             ((eq :or (combining-type frame))
-              (loop :for rule :in (rules frame)
-                    :when (apply-rule rule item)
-                      :return t
-                    :finally (return nil)))
-             ((eq :and (combining-type frame))
-              (loop :for rule :in (rules frame)
-                    :when (not (apply-rule rule item))
-                      :return nil
-                    :finally (return t))))))
+           (handler-case
+               (cond
+                 ((eq :or (combining-type frame))
+                  (loop :for rule :in (rules frame)
+                        :when (apply-rule rule item)
+                          :return t
+                        :finally (return nil)))
+                 ((eq :and (combining-type frame))
+                  (loop :for rule :in (rules frame)
+                        :when (not (apply-rule rule item))
+                          :return nil
+                        :finally (return t))))
+             (error () nil))))
     (if (null (rules frame))
         nil ; An empty filter matches on nothing.
         (loop :for item :in (items frame)
